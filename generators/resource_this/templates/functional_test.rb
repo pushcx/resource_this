@@ -20,7 +20,7 @@ class <%= controller_class_name %>ControllerTest < Test::Unit::TestCase
   end
 
   def test_should_get_new
-    @request.accept = 'application/xml'  
+    @request.accept = 'application/xml'
     get :new
     assert_response :success
   end
@@ -34,7 +34,7 @@ class <%= controller_class_name %>ControllerTest < Test::Unit::TestCase
   end
 
   def test_should_show_<%= file_name %>
-    @request.accept = 'application/xml'  
+    @request.accept = 'application/xml'
     get :show, :id => 1
     assert_response :success
   end

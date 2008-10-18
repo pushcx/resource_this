@@ -4,20 +4,20 @@ class ResourceThisNestingTest < Test::Unit::TestCase
   def setup
     @controller = CommentsController.new
     @request    = ActionController::TestRequest.new
-    @request.accept = 'application/xml'  
+    @request.accept = 'application/xml'
     @response   = ActionController::TestResponse.new
     @first = Post.create(:title => "test", :body => "test")
     @second = Post.create(:title => "test2", :body => "test2")
     @first_comment = Comment.create(:post => @first, :body => "test")
     @second_comment = Comment.create(:post => @second, :body => "test")
-    ActionController::Routing::Routes.draw do |map|  
+    ActionController::Routing::Routes.draw do |map|
       map.resources :posts do |post|
         post.resources :comments
       end
       map.resources :comments
     end
   end
-  
+
   def teardown
     Post.find(:all).each { |post| post.destroy }
     Comment.find(:all).each { |comment| comment.destroy }
@@ -59,7 +59,7 @@ class ResourceThisNestingTest < Test::Unit::TestCase
     assert assigns(:comment)
     assert assigns(:post)
   end
-  
+
   def test_should_create_comment_html
     @request.accept = 'text/html'
     assert_difference('Comment.count') do
@@ -96,7 +96,7 @@ class ResourceThisNestingTest < Test::Unit::TestCase
     assert assigns(:comment)
     assert assigns(:post)
   end
-  
+
   def test_should_update_comment_html
     @request.accept = 'text/html'
     put :update, :post_id => @first.id, :id => @first_comment.id, :comment => { :post => @first, :body => "test" }
@@ -115,7 +115,7 @@ class ResourceThisNestingTest < Test::Unit::TestCase
     end
     assert_response :success
   end
-  
+
   def test_should_destroy_html
     @request.accept = 'text/html'
     assert_difference('Comment.count', -1) do

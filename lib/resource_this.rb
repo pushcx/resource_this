@@ -16,10 +16,10 @@ module ResourceThis # :nodoc:
       collection_url        = "#{plural_name}_url"
       resource_url          = options[:path_prefix] + resource_url unless options[:path_prefix].nil?
       collection_url        = options[:path_prefix] + collection_url unless options[:path_prefix].nil?
-      
+
       class_inheritable_accessor :resource_this_finder_options
       self.resource_this_finder_options = options[:finder_options] || {}
-      
+
       unless options[:nested].nil?
         nested                = options[:nested].to_s.singularize
         nested_class          = nested.camelize
@@ -40,25 +40,25 @@ module ResourceThis # :nodoc:
         before_filter :create_#{singular_name}, :only => [ :create ]
         before_filter :update_#{singular_name}, :only => [ :update ]
         before_filter :destroy_#{singular_name}, :only => [ :destroy ]
-      
+
       protected
-      
+
         def finder_options
           resource_this_finder_options.class == Proc ? resource_this_finder_options.call : {}
         end
-      
+
       end_eval
-      
+
       if options[:nested].nil?
         module_eval <<-"end_eval", __FILE__, __LINE__
           def finder_base
             #{class_name}
           end
-          
+
           def collection
             #{class_name}.find(:all, finder_options)
           end
-          
+
           def collection_url
             #{collection_url}
           end
@@ -72,15 +72,15 @@ module ResourceThis # :nodoc:
           def load_#{nested}
             @#{nested} = #{nested_class}.find(params[:#{nested}_id]) rescue nil
           end
-          
+
           def finder_base
             @#{nested}.nil? ? #{class_name} : @#{nested}.#{plural_name}
           end
-          
+
           def collection
             @#{nested}.nil? ? #{class_name}.find(:all, finder_options) : @#{nested}.#{plural_name}.find(:all, finder_options)
           end
-          
+
           def collection_url
             @#{nested}.nil? ? #{collection_url} : #{nested_collection_url}
           end
@@ -90,34 +90,34 @@ module ResourceThis # :nodoc:
           end
         end_eval
       end
-      
+
       module_eval <<-"end_eval", __FILE__, __LINE__
         def load_#{singular_name}
           @#{singular_name} = finder_base.find(params[:id])
         end
-        
+
         def new_#{singular_name}
           @#{singular_name} = finder_base.new
         end
-        
+
         def create_#{singular_name}
           returning true do
             @#{singular_name} = finder_base.new(params[:#{singular_name}])
             @created = @#{singular_name}.save
           end
         end
-        
+
         def update_#{singular_name}
           returning true do
             @updated = @#{singular_name}.update_attributes(params[:#{singular_name}])
           end
         end
-        
+
         def destroy_#{singular_name}
           @#{singular_name} = @#{singular_name}.destroy
         end
       end_eval
-            
+
       if will_paginate_index
         module_eval <<-"end_eval", __FILE__, __LINE__
           def load_#{plural_name}
@@ -142,7 +142,7 @@ module ResourceThis # :nodoc:
           end
         end
 
-        def show          
+        def show
           respond_to do |format|
             format.html
             format.xml  { render :xml => @#{singular_name} }
@@ -150,7 +150,7 @@ module ResourceThis # :nodoc:
           end
         end
 
-        def new          
+        def new
           respond_to do |format|
             format.html { render :action => :new }
             format.xml  { render :xml => @#{singular_name} }
@@ -171,7 +171,7 @@ module ResourceThis # :nodoc:
               format.js
             end
           end
-        end 
+        end
 
         def edit
           respond_to do |format|
@@ -195,7 +195,7 @@ module ResourceThis # :nodoc:
           end
         end
 
-        def destroy          
+        def destroy
           respond_to do |format|
             format.html { redirect_to(collection_url) }
             format.xml  { head :ok }
