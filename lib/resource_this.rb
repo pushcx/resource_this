@@ -152,7 +152,7 @@ module ResourceThis # :nodoc:
 
         def new          
           respond_to do |format|
-            format.html { render :action => :edit }
+            format.html { render :action => :new }
             format.xml  { render :xml => @#{singular_name} }
             format.js
           end
